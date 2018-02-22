@@ -1,4 +1,8 @@
-#Checks if file exists; can be found by the full name or a part of the name; if file exists, prints it's name (not full path to the file)
+"""
+Checks if a file exists.
+A file can be found by the full name or a part of the name.
+If the file exists, prints it's name (not the full path to the file)
+"""
 import os
 import re
 found = False

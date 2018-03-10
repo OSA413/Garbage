@@ -14,6 +14,10 @@ extension.
         "D:\game\models\test.mtl", enter "D:\game\models\test".
 
 If .obj or .mtl is missed, it will be skipped.
+
+Update 0:
+Now this program can add missed "d 1" and "Tr 1" lines in MTL files if you use
+SAMDL (by MainMemory), so the models will not look too darker and "edgy".
 """
 import re
 import sys
@@ -46,10 +50,18 @@ while True:
 
         if os.path.exists(str(f_name)+".mtl"):
             with open(str(f_name)+".mtl","r") as f:
-                model = f.read()
+                material = f.read()
 
+            #Change this line if you want to fix translucency of material or to not
+            fix_d_Tr = None
             with open(str(f_name)+".mtl","w") as f:
-                f.write(model.replace(",","."))
+                material = material.replace(",",".")
+                if material.count("newmtl ") != material.count("Tr "):
+                    if fix_d_Tr == None:
+                        fix_d_Tr = input("Fix translucency?\n[Y|N]>>> ") in ["y","Y"]
+                    if fix_d_Tr:
+                        material = material.replace("\nillum","\nd 1\nTr 1\nillum")
+                f.write(material)
         else:
             print("MTL file wasn't found")
 

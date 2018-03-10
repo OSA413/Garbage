@@ -1,6 +1,6 @@
 """
 Copies textures that are used in MTL material file into a separated folder
-"Used textures" where the MTL file is placed.
+"%file_name% used textures" where the MTL file is placed.
 Usage: enter the full path to the MTL file.
 """
 import re
@@ -20,15 +20,16 @@ while True:
             texture_list = list(set(re.findall(r"Map_Kd .+?\n",material)))
             print(str(len(texture_list))+" textures in MTL file")
             print("Separating textures...")
-            if not os.path.exists(os.path.join(os.path.dirname(f_name),"Used textures")):
-                os.makedirs(os.path.join(os.path.dirname(f_name),"Used textures"))
+            separated_folder_name = str(f_name)+" used textures"
+            if not os.path.exists(os.path.join(os.path.dirname(f_name),separated_folder_name)):
+                os.makedirs(os.path.join(os.path.dirname(f_name),separated_folder_name))
             for i in range(len(texture_list)):
                 texture = texture_list[i].split(" ")[1][:-1]
-                shutil.copyfile(os.path.join(os.path.dirname(f_name),texture), os.path.join(os.path.dirname(f_name),"Used textures",texture))
+                shutil.copyfile(os.path.join(os.path.dirname(f_name),texture), os.path.join(os.path.dirname(f_name),separated_folder_name,texture))
 
+            print("Done!")
         else:
             print("MTL file wasn't found")
-        print("Done!")
     except:
         print("Error")
         print(sys.exc_info()[1])

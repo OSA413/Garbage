@@ -18,55 +18,42 @@ If .obj or .mtl is missed, it will be skipped.
 Update 0:
 Now this program can add missed "d 1" and "Tr 1" lines in MTL files if you use
 SAMDL (by MainMemory), so the models will not look too darker and "edgy".
+
+Update 1:
+Rewritten to be used as a module.
 """
-import re
-import sys
-import os
 
-while True:
-    try:
-        f_name = input(">>> ")
+def fix_obj(path):
+    with open(str(path)+".obj","r") as f:
+        model = f.read()
 
-        if os.path.exists(str(f_name)+".obj"):
-            with open(str(f_name)+".obj","r") as f:
-                model = f.read()
+    #This way is faster than using regex
+    fixed_model = model.split("\n")
+    for i in range(len(fixed_model)):
+        if "#" in fixed_model[i]:
+            fixed_model[i] = fixed_model[i][:fixed_model[i].index("#")]
 
-            #I know that a better way exists, but I didn't know about it when I was writting it.
-            garbage_list = re.findall(r"#.+?\n",model)
+    with open(str(path)+".obj","w") as f:
+        f.write("\n".join(fixed_model))
 
-            print(len(garbage_list))
-            last_progress = None
-            for i in range(len(garbage_list)):
-                model = model.replace(garbage_list[i],"\n")
-                #something like progre ssbar
-                if int((i/len(garbage_list)*10)) != last_progress:
-                    last_progress = int((i/len(garbage_list)*10))
-                    print(last_progress)
+def fix_mtl(path, fix_translucency = False):
+    with open(str(path)+".mtl","r") as f:
+        material = f.read()
 
-            with open(str(f_name)+".obj","w") as f:
-                f.write(model)
-        else:
-            print("OBJ file wasn't found")
+    material = material.replace(",",".")
+    if fix_translucency:
+        if material.count("Tr ") == 0 and material.count("newmtl "):
+            for parameter in ["Map_Kd","illum","Ns","Ks","Kd","Ka"]:
+                if material.count(str(parameter)+" ") == material.count("newmtl "):
+                    material = material.replace("\n"+str(parameter),"\nd 1\nTr 1\n"+str(parameter))
+                    break
+        
+    with open(str(path)+".mtl","w") as f:
+        f.write(material)
 
-        if os.path.exists(str(f_name)+".mtl"):
-            with open(str(f_name)+".mtl","r") as f:
-                material = f.read()
+def fix(path, fix_translucency = False):
+    fix_obj(path)
+    fix_mtl(path, fix_translucency)
 
-            #Change this line if you want to fix translucency of material or to not
-            fix_d_Tr = None
-            with open(str(f_name)+".mtl","w") as f:
-                material = material.replace(",",".")
-                if material.count("newmtl ") != material.count("Tr "):
-                    if fix_d_Tr == None:
-                        fix_d_Tr = input("Fix translucency?\n[Y|N]>>> ") in ["y","Y"]
-                    if fix_d_Tr:
-                        material = material.replace("\nillum","\nd 1\nTr 1\nillum")
-                f.write(material)
-        else:
-            print("MTL file wasn't found")
-
-        print("Done!")
-
-    except:
-        print("Error")
-        print(sys.exc_info()[1])
+if __name__ == "__main__":
+    fix(input(">>> "),input("Fix translucency?\n[Y|N]>>> ") in ["y","Y"])

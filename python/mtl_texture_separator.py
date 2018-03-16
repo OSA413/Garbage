@@ -2,34 +2,33 @@
 Copies textures that are used in MTL material file into a separated folder
 "%file_name% used textures" where the MTL file is placed.
 Usage: enter the full path to the MTL file.
+
+Update: 0
+Rewritten to be used as a module
 """
 import re
-import sys
 import os
 import shutil
 
-while True:
-    try:
-        f_name = input(">>> ")
+def get_textures(mtl_file):
+    with open(mtl_file,"r") as f:
+        material = f.read()
+        
+    texture_list = list(set(re.findall(r"Map_Kd .+?\n",material)))
+    for i in range(len(texture_list)):
+        texture_list[i] = texture_list[i][7:-1]
 
-        if os.path.exists(f_name):
-            with open(f_name,"r") as f:
-                material = f.read()
-            print(os.path.dirname(f_name))
+    return texture_list
 
-            texture_list = list(set(re.findall(r"Map_Kd .+?\n",material)))
-            print(str(len(texture_list))+" textures in MTL file")
-            print("Separating textures...")
-            separated_folder_name = str(f_name)+" used textures"
-            if not os.path.exists(os.path.join(os.path.dirname(f_name),separated_folder_name)):
-                os.makedirs(os.path.join(os.path.dirname(f_name),separated_folder_name))
-            for i in range(len(texture_list)):
-                texture = texture_list[i].split(" ")[1][:-1]
-                shutil.copyfile(os.path.join(os.path.dirname(f_name),texture), os.path.join(os.path.dirname(f_name),separated_folder_name,texture))
+def separate(mtl_file,separated_folder = None):
+    if separated_folder == None:
+        separated_folder = os.path.join(os.path.dirname(mtl_file),str(mtl_file)+" used textures")
+    if not os.path.exists(separated_folder):
+        os.makedirs(separated_folder)
 
-            print("Done!")
-        else:
-            print("MTL file wasn't found")
-    except:
-        print("Error")
-        print(sys.exc_info()[1])
+    texture_list = get_textures(mtl_file)
+    for i in range(len(texture_list)):
+        shutil.copyfile(os.path.join(os.path.dirname(mtl_file),texture_list[i]), os.path.join(separated_folder,texture_list[i]))
+
+if __name__ == "__main__":
+    separate(input(">>> "))

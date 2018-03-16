@@ -26,19 +26,20 @@ def cut(path):
     with open(str(path)+".mtl","r") as f:
         material = f.read()
 
-    save_materials = []
     if material.count("newmtl") != len(materials_list):
+        save_materials = []
         materials_used = material.split("newmtl ")[1:]
         for i in range(len(materials_used)):
             for j in materials_list:
                 if materials_used[i].startswith(str(j)+"\n"):
                     save_materials.append([i,j])
-    material = ""
-    for i in save_materials:
-        material += "newmtl "+str(materials_used[i[0]])
 
-    with open(str(path)+".mtl","w") as f:
-        f.write(material)
+        material = ""
+        for i in save_materials:
+            material += "newmtl "+str(materials_used[i[0]])
+
+        with open(str(path)+".mtl","w") as f:
+            f.write(material)
 
 if __name__ == "__main__":
     cut(input(">>> "))

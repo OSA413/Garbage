@@ -9,53 +9,36 @@ extension.
         "D:\models\test.mtl", enter "D:\models\test".
 """
 import re
-import sys
-import os
 
-while True:
-    try:
-        f_name = input(">>> ")
+def get_materials(path):
+    with open(str(path)+".obj","r") as f:
+        model = f.read()
 
-        if os.path.exists(str(f_name)+".obj"):
-            with open(str(f_name)+".obj","r") as f:
-                model = f.read()
+    materials_list = list(set(re.findall(r"usemtl .+?\n",model)))
+    for i in range(len(materials_list)):
+        materials_list[i] = materials_list[i][7:-1]
 
-            #I know that a better way exists, but I didn't know about it when I was writting it.
-            material_list = list(set(re.findall(r"usemtl .+?\n",model)))
-            for i in range(len(material_list)):
-                material_list[i] = material_list[i].split(" ")[1]
+    return materials_list
 
-            print(str(len(material_list))+" materials in OBJ file")
+def cut(path):
+    materials_list = get_materials(path)
 
-            if os.path.exists(str(f_name)+".mtl"):
-                with open(str(f_name)+".mtl","r") as f:
-                    material = f.read()
+    with open(str(path)+".mtl","r") as f:
+        material = f.read()
 
-                save_materials = []
-                print(str(material.count("newmtl"))+" materials in MTL file")
-                if material.count("newmtl") != len(material_list):
-                    print("Searching unused materials...")
-                    materials_used = material.split("newmtl ")[1:]
-                    for i in range(len(materials_used)):
-                        for j in material_list:
-                            if materials_used[i].startswith(j):
-                                save_materials.append([i,j])
-                    material = ""
-                    print("Cutting unused materials...")
-                    for i in save_materials:
-                        material += "newmtl "+str(materials_used[i[0]])
+    save_materials = []
+    if material.count("newmtl") != len(materials_list):
+        materials_used = material.split("newmtl ")[1:]
+        for i in range(len(materials_used)):
+            for j in materials_list:
+                if materials_used[i].startswith(str(j)+"\n"):
+                    save_materials.append([i,j])
+    material = ""
+    for i in save_materials:
+        material += "newmtl "+str(materials_used[i[0]])
 
-                    with open(str(f_name)+".mtl","w") as f:
-                        f.write(material)
-                else:
-                    print("Nothing to cut!")
-            else:
-                print("MTL file wasn't found")
-        else:
-            print("OBJ file wasn't found")
+    with open(str(path)+".mtl","w") as f:
+        f.write(material)
 
-        print("Done!")
-
-    except:
-        print("Error")
-        print(sys.exc_info()[1])
+if __name__ == "__main__":
+    cut(input(">>> "))

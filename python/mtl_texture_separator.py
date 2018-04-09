@@ -2,9 +2,6 @@
 Copies textures that are used in MTL material file into a separated folder
 "%file_name% used textures" where the MTL file is placed.
 Usage: enter the full path to the MTL file.
-
-Update: 0
-Rewritten to be used as a module
 """
 import re
 import os

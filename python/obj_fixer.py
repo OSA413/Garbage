@@ -4,9 +4,6 @@ This program fixes .obj files that contain "#" at the end of the lines
 and commas instead of dots in .mtl files.
     e.g. "d 0,69803923368454"
 
-This may be usefull if you use old SADXLVL and SADXMDL by MainMemory to rip
-Sonic Adventure DX models and levels.
-
 How to use: enter the full path to the .obj and .mtl files without the file
 extension.
     e.g.
@@ -14,13 +11,6 @@ extension.
         "D:\game\models\test.mtl", enter "D:\game\models\test".
 
 If .obj or .mtl is missed, it will be skipped.
-
-Update 0:
-Now this program can add missed "d 1" and "Tr 1" lines in MTL files if you use
-SAMDL (by MainMemory), so the models will not look too darker and "edgy".
-
-Update 1:
-Rewritten to be used as a module.
 """
 
 def fix_obj(path):

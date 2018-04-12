@@ -63,6 +63,16 @@ namespace TriangleInfo
             //converts radians to degrees
             return rad*180/Math.PI;
         }
+        static double CircumRadius(double a, double b, double c, double area)
+        {
+            //R = abc/4S
+            return a*b*c/4/area;
+        }
+        static double Inradius(double area, double perimeter)
+        {
+            //r = S/p = 2S/P
+            return 2*area/perimeter;
+        }
         static int TriangleTypeSides(double a, double b, double c)
         {
             //(a-b <= EPSILON) is made because a == b sometimes doesn't return true with doubles (e.g. 5*Math.Pow(3,0.5) and 8.66025403784439)
@@ -126,8 +136,12 @@ namespace TriangleInfo
                 Console.WriteLine(angleC+"° ("+DegtoRad(angleC)+")");
                 string[] triangletypesangles = { "right", "obtuse", "acute" };
                 Console.WriteLine("This triangle is "+triangletypesangles[TriangleTypeAngels(angleA, angleB, angleC)]);
-                Console.WriteLine("Area: "+TriangleArea(angleA,b,c));
-                Console.WriteLine("Perimeter: "+TrianglePerimeter(a,b,c));
+                double area = TriangleArea(angleA,b,c);
+                double perimeter = TrianglePerimeter(a,b,c);
+                Console.WriteLine("Area: "+area);
+                Console.WriteLine("Perimeter: "+perimeter);
+                Console.WriteLine("Circumradius: "+CircumRadius(a,b,c,area));
+                Console.WriteLine("Inradius: "+Inradius(area,perimeter));
             }
             else
             {

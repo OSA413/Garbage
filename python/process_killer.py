@@ -5,15 +5,15 @@ Rewritten to be used as a module.
 import os
 import sys
 
-def kill_process():
+def kill_process(process_name):
     #For Windows
     if sys.platform == "win32":
-        os.popen("taskkill /IM "+str(user_input)+".exe /F")
+        os.popen("taskkill /IM "+str(process_name)+".exe /F")
         #.bin is used in some programs (e.g. LibreOffice)
-        os.popen("@echo off\ntaskkill /IM "+str(user_input)+".bin /F")
+        os.popen("@echo off\ntaskkill /IM "+str(process_name)+".bin /F")
     #For Linux (tested on Ubuntu)
     elif "linux" in sys.platform:
-        os.popen("killall -I "+str(user_input))
+        os.popen("killall -I "+str(process_name))
 
 if __name__ == "__main__":
     while True:

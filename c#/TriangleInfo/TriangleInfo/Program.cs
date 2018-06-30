@@ -1,9 +1,6 @@
 ﻿//for a better representation of the variables, see https://en.wikipedia.org/wiki/Triangle#/media/File:Triangle_with_notations_2.svg
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TriangleInfo
 {

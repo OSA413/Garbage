@@ -25,10 +25,10 @@ def find(directory,key_name):
 def go_deeper(directory):
     global files_raw
     a = list(os.walk(directory))[0]
-    files_raw.append(b)
+    files_raw.append(a)
     if len(a[1]) != 0:
         for i in range(len(a[1])):
-            go_deeper(os.path.join(b[0],a[1][i]))
+            go_deeper(os.path.join(a[0],a[1][i]))
 
 if __name__ == "__main__":
     print(find(input("[1/2]>>> "),input("[2/2]>>> ")))

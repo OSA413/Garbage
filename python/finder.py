@@ -6,29 +6,21 @@ If the file exists, prints it's full path.
 import os
 
 def find(directory,key_name):
-    global files_raw
-    files_raw = []
-    go_deeper(directory)
+    a = list(os.walk(directory))
+    #Tries to use relative path if absolute is not present
+    if a == []:
+        a = list(os.walk(os.path.join(os.path.dirname(__file__),directory)))
     files_list = []
-    for i in range(len(files_raw)):
-        for j in range(len(files_raw[i][1])):
-            folder = os.path.join(files_raw[i][0],files_raw[i][1][j])
-            if key_name in folder:
-                files_list.append(folder)
-        for j in range(len(files_raw[i][2])):
-            file = os.path.join(files_raw[i][0],files_raw[i][2][j])
-            if key_name in file:
-                files_list.append(file)
-    del files_raw
+    for i in a:
+        for j in i[1]:
+            b = os.path.join(i[0],j)
+            if key_name in b:
+                files_list.append(b)
+        for j in i[2]:
+            b = os.path.join(i[0],j)
+            if key_name in b:
+                files_list.append(b)
     return files_list
 
-def go_deeper(directory):
-    global files_raw
-    a = list(os.walk(directory))[0]
-    files_raw.append(a)
-    if len(a[1]) != 0:
-        for i in range(len(a[1])):
-            go_deeper(os.path.join(a[0],a[1][i]))
-
 if __name__ == "__main__":
-    print(find(input("[1/2]>>> "),input("[2/2]>>> ")))
+    print(find(input("[Starting directory]>>> "),input("[Key word]>>> ")))

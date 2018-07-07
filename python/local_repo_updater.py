@@ -30,7 +30,7 @@ def input(x=""):
 
 #By default it uses the same directory as the .py file in Windows, but Ubuntu saves the file in "/home/user_name" directory
 #The line below makes it to save the file in the same directory as the .py file
-os.chdir(os.path.join(*os.path.split(sys.argv[0])[:-1]))
+os.chdir(os.path.dirname(sys.argv[0]))
 
 def open_page(url):
     return urllib.request.urlopen(url)

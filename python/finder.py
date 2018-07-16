@@ -4,8 +4,9 @@ A file can be found by the full name or a part of the name.
 If the file exists, prints it's full path.
 """
 import os
+import sys
 
-def find(directory,key_name):
+def find(directory, key_name = ""):
     a = list(os.walk(directory))
     #Tries to use relative path if absolute is not present
     if a == []:
@@ -23,4 +24,12 @@ def find(directory,key_name):
     return files_list
 
 if __name__ == "__main__":
-    print(find(input("[Starting directory]>>> "),input("[Key word]>>> ")))
+    if len(sys.argv) == 1:
+        print("\n".join(find(input("[Starting directory]>>> "),input(" "*10+"[Key word]>>> "))))
+    elif len(sys.argv) == 2:
+        print("\n".join(find(sys.argv[1])))
+    elif len(sys.argv) == 3:
+        print("\n".join(find(sys.argv[1],sys.argv[2])))
+    else:
+        print("Usage: finder.py [starting directory] [key word]")
+        print("Prints found directories and files in [starting directory] by [key word]")

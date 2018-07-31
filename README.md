@@ -2,7 +2,7 @@ Repository overview
 
 # [C#](https://github.com/OSA413/Garbage/tree/master/c%23)
 
-### [TriangleInfo](https://github.com/OSA413/Garbage/tree/master/c%23/TriangleInfo)
+### [TriangleInfo](c%23/TriangleInfo)
 
 Shows information about a triangle. Can generate random and specific triangles.
 

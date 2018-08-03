@@ -6,6 +6,9 @@ import os
 import sys
 
 def kill_process(process_name):
+    #Security fix
+    process_name = process_name.split(" ")[0].split(";")[0]
+
     #For Windows
     if sys.platform == "win32":
         os.popen("taskkill /IM "+str(process_name)+".exe /F")

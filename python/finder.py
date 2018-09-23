@@ -76,7 +76,7 @@ if __name__ == "__main__":
         recursive       = input("Recursively? [Y/N]>>> ".rjust(txt_len)).lower() == "y"
 
     if len(sys_argv) == 2:
-        print("\n".join(find(sys_argv[1], case_sensitive=case_sensitiver, ecursive=recursive)))
+        print("\n".join(find(sys_argv[1], case_sensitive=case_sensitive, recursive=recursive)))
     elif len(sys_argv) == 3:
         print("\n".join(find(sys_argv[1], sys_argv[2], case_sensitive=case_sensitive,recursive=recursive)))
     else:

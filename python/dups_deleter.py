@@ -6,17 +6,22 @@ It checks only files that are in the same folder as this script (no subfolders).
 """
 import os, hashlib
 
-files = list(filter(lambda fl: os.path.isfile(fl), os.listdir(os.getcwd())))
-files_content = []
+file_list = [x for x in os.listdir(os.getcwd()) if os.path.isfile(x)]
+files = [[],[]]
 
-for i in range(len(files)):
-    with open(files[i],"rb") as f:
-        files_content.append(hashlib.sha256(f.read()).hexdigest())
+for i in range(len(file_list)):
+    with open(file_list[i], "rb") as f:
+        files[0].append(file_list[i])
+        files[1].append(hashlib.sha256(f.read()).hexdigest())
 
-dif = 0
-for i in range(len(files)):
-    if files_content.count(files_content[i-dif]) > 1:
-        os.remove(files[i-dif])
-        del files[i-dif]
-        del files_content[i-dif]
-        dif += 1
+while files[0]:
+    tmp_hash = files[1][0]
+    del files[0][0]
+    del files[1][0]
+    
+    for i in range(files[1].count(tmp_hash)):
+        ind = files[1].index(tmp_hash)
+        
+        os.remove(files[0][ind])
+        del files[0][ind]
+        del files[1][ind]

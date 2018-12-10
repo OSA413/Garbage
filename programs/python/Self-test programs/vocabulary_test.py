@@ -1,10 +1,10 @@
 #Test your vocabulary!
 #TODO: add second separator for words with the same meaning.
 """
-This program is designed to show you random words on one language, you have to write them in another language.
-The words are defined in a separated file and are splitted by a symbol.
+This program is designed to show you random words in one language, you have to write them in another language.
+The words are defined in a separated file and are splitted by a symbol(s).
 This is at least the third version of this kind of programs.
-This also supports QPython 3
+This also supports QPython 3 (the old 3.5, the new one hasn't been tested)
 """
 import os, sys, random
 
@@ -13,7 +13,7 @@ print("github.com/OSA413\n")
 
 vocabulary_file = "vocabulary.txt"
 main_separator = "-"
-progress_file = ""
+progress_file = "_progress.txt"
 
 #input() UnicodeDecodeError "fix"
 inputt = input
@@ -36,12 +36,12 @@ def load():
     
     if file == "": return
 
-    progress_file = file + "_progress.txt"
+    progress_file = file + progress_file
 
     with open(file,"r") as f:
         text0 = f.read()
-        
-    text1 = ""
+
+    text1 = "0"
     if os.path.isfile(progress_file):
         with open(progress_file,"r") as f:
             text1 = f.read()
@@ -54,7 +54,10 @@ def load():
         ttt = lst0[i].split(main_separator)
         if len(ttt) != 2:
             continue
-        prog = int(lst1[i])
+
+        prog = 0
+        if len(lst1) > i:
+            prog = int(lst1[i])
         
         lst_all.append([ttt[0], ttt[1], prog])
     
@@ -73,7 +76,8 @@ for i in range(len(main_list)):
     
 random.shuffle(index_list)
 
-print(len(main_list)/len(index_list)*100)
+print("Total progress:")
+print(str(101 - len(index_list)/len(main_list))+"%")
 
 for i in index_list:
     word_index = random.randint(0,1)
@@ -109,7 +113,7 @@ for i in index_list:
         rsltt = ((sum1/len1)/(sum0/len0)*(len1/len0))**2
         
         print(rsltt)
-        if rsltt > 0.98: correct = True
+        if rsltt >= 0.98: correct = True
 
     dif = (3*correct-2)*(main_list[i][2]//10+1)
 
@@ -133,4 +137,3 @@ for i in index_list:
 
     print("="*25,"\n")
     save(main_list)
-    

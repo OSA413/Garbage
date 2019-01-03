@@ -29,15 +29,15 @@ def find(directory, key_name="", case_sensitive=True, recursive=False):
             for j in i[1]:
                 b = os.path.join(i[0],j)
                 c = b
-                if case_sensitive:
+                if not case_sensitive:
                     c = b.lower()
-
+                
                 if key_name in c:
                     files_list.append(b)
             for j in i[2]:
                 b = os.path.join(i[0],j)
                 c = b
-                if case_sensitive:
+                if not case_sensitive:
                     c = b.lower()
 
                 if key_name in c:

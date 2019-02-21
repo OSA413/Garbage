@@ -7,21 +7,13 @@ It checks only files that are in the same folder as this script (no subfolders).
 import os, hashlib
 
 file_list = [x for x in os.listdir(os.getcwd()) if os.path.isfile(x)]
-files = [[],[]]
+files = []
 
 for i in range(len(file_list)):
+    if (i % (len(file_list) // 10) == 0): print(i // (len(file_list) // 10))
     with open(file_list[i], "rb") as f:
-        files[0].append(file_list[i])
-        files[1].append(hashlib.sha256(f.read()).hexdigest())
-
-while files[0]:
-    tmp_hash = files[1][0]
-    del files[0][0]
-    del files[1][0]
-    
-    for i in range(files[1].count(tmp_hash)):
-        ind = files[1].index(tmp_hash)
-        
-        os.remove(files[0][ind])
-        del files[0][ind]
-        del files[1][ind]
+        sha = hashlib.sha256(f.read()).hexdigest()
+        if sha in files:
+            os.remove(file_list[i])
+        else:
+            files.append(sha)

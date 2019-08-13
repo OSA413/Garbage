@@ -1,5 +1,5 @@
 #This program finds and deletes duplicates of files in a given directory
-import os, hashlib, sys
+import os, hashlib, sys, glob
 
 __author__ = "OSA413"
 __license__ = "MIT License"
@@ -9,27 +9,31 @@ def delete_this(path="$cwd", make_sorted=False):
     if path == "$cwd":
         path = os.getcwd()
 
-    file_list = [x for x in os.listdir(path) if os.path.isfile(x)]
+    file_list = [x for x in glob.glob(path + "/**/*.*", recursive = True) if os.path.isfile(x)]
     if make_sorted: file_list.sort()
+    shas = []
+    print(len(file_list))
+    
+    for i in file_list:
+        if os.path.isfile(i):
+            with open(i, "rb") as f:
+                sha = hashlib.sha256(f.read()).hexdigest()
+                if sha in shas:
+                    os.remove(i)
+                else:
+                    shas.append(sha)
 
-    files = []
-
-    for i in range(len(file_list)):
-        if (i % (len(file_list) // 10) == 0): print(i // (len(file_list) // 10))
-        with open(file_list[i], "rb") as f:
-            sha = hashlib.sha256(f.read()).hexdigest()
-            if sha in files:
-                os.remove(file_list[i])
-            else:
-                files.append(sha)
+    print(len(shas))
                 
 if __name__ == "__main__":
+    args = sys.argv[:]
     path = "$cwd"
     make_sorted = False
     
-    if len(sys.argv) > 0:
-        path = sys.argv[0]
-    if len(sys.argv) > 1:
+    if "--sorted" in args[1:]:
         make_sorted = True
-        
+    
+    if len(args) > 1:
+        path = args[1]
+
     delete_this(path, make_sorted)

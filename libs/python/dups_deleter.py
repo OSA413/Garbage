@@ -32,6 +32,7 @@ if __name__ == "__main__":
     
     if "--sorted" in args[1:]:
         make_sorted = True
+        args.remove("--sorted")
     
     if len(args) > 1:
         path = args[1]

@@ -9,9 +9,9 @@ def delete_this(path="$cwd", make_sorted=False):
     if path == "$cwd":
         path = os.getcwd()
 
-    file_list = [x for x in glob.glob(path + "/**/*.*", recursive = True) if os.path.isfile(x)]
+    file_list = [x for x in glob.glob(path + "/**/*", recursive = True) if os.path.isfile(x)]
     if make_sorted: file_list.sort()
-    shas = []
+    shas = set()
     print(len(file_list))
     
     for i in file_list:
@@ -21,7 +21,7 @@ def delete_this(path="$cwd", make_sorted=False):
                 if sha in shas:
                     os.remove(i)
                 else:
-                    shas.append(sha)
+                    shas.add(sha)
 
     print(len(shas))
                 
